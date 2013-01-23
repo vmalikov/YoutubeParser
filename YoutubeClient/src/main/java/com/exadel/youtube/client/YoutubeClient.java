@@ -1,5 +1,29 @@
 package com.exadel.youtube.client;
 
+/*
+ * #%L
+ * YoutubeClient
+ * $Id:$
+ * $HeadURL:$
+ * %%
+ * Copyright (C) 2013 Malykov Vladymyr
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the 
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public 
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #L%
+ */
+
 import com.exadel.youtube.parser.YoutubeParser;
 
 import java.net.MalformedURLException;
@@ -24,7 +48,7 @@ public class YoutubeClient
     {
         YoutubeClient client = new YoutubeClient();
         URL url;
-        if(args.length != 0) {
+        if(args.length > 0) {
             try {
                 url = client.getUrl(args[0]);
                 client.showRelatedVideosInfo(url);
@@ -73,7 +97,10 @@ public class YoutubeClient
             if(!url.getHost().equals(HOST)) {
                 throw new IllegalArgumentException("Url invalid!");
             }
-        } catch (MalformedURLException e) {
+        } catch(IllegalArgumentException ie) {
+            // to explain the causes of exception
+            throw new IllegalArgumentException("Url invalid!");
+        } catch(MalformedURLException e) {
             throw new IllegalArgumentException("Url invalid!");
         }
         return url;

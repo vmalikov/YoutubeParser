@@ -1,5 +1,29 @@
 package com.exadel.youtube.parser;
 
+/*
+ * #%L
+ * YoutubeClient
+ * $Id:$
+ * $HeadURL:$
+ * %%
+ * Copyright (C) 2013 Malykov Vladymyr
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the 
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public 
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #L%
+ */
+
 import com.exadel.youtube.client.RelatedVideoItem;
 import com.exadel.youtube.connector.YoutubeConnector;
 
@@ -19,6 +43,7 @@ public class YoutubeParser {
     private final String TITLE = "title";
 
     private final String UL_CLASS = "video-list";
+    private final String UL_ID = "watch-related";
     private final String UL_NAME = "ul";
 
     private final String LI_CLASS = "video-list-item";
@@ -27,6 +52,7 @@ public class YoutubeParser {
     private final String HREF_NAME = "href";
     private final String SPAN_NAME = "span";
     private final String CLASS_NAME = "class";
+    private final String ID_NAME = "id";
 
     /**
      * Create list with all related videos from the content loaded
@@ -40,7 +66,7 @@ public class YoutubeParser {
         YoutubeConnector connector = new YoutubeConnector();
         TagNode root = connector.getRoot(url);
         if (root != null) {
-            TagNode ul_elem = findVideoListElem(root);
+            TagNode ul_elem = getVideoElem(root);
             if (ul_elem != null) {
                 return getRelatedVideosList(ul_elem);
             }
@@ -58,11 +84,12 @@ public class YoutubeParser {
      * @return instance org.htmlcleaner.TagNode class which represent <ul>
      * element with all <li> elements with info about related videos
      */
-    private TagNode findVideoListElem(TagNode root) {
+    private TagNode getVideoElem(TagNode root) {
         TagNode elements[] = root.getElementsByName(UL_NAME, true);
         for (int i = 0; elements != null && i < elements.length; i++) {
             String classType = elements[i].getAttributeByName(CLASS_NAME);
-            if (classType != null && classType.equals(UL_CLASS)) {
+            String idType = elements[i].getAttributeByName(ID_NAME);
+            if (classType != null && classType.equals(UL_CLASS) && idType != null && idType.equals(UL_ID)) {
                 return elements[i];
             }
         }
